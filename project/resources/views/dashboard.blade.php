@@ -10,6 +10,7 @@
                 <div class="card-body">
                     <h5 class="card-title mb-2">Users</h5>
                     <div class="display-6">{{ $stats['users'] ?? 0 }}</div>
+                    <a href="{{ url('/users') }}" class="stretched-link"></a>
                 </div>
             </div>
         </div>
@@ -19,6 +20,7 @@
                 <div class="card-body">
                     <h5 class="card-title mb-2">Equipment</h5>
                     <div class="display-6">0</div>
+                    <a href="#" class="stretched-link" aria-label="Go to Equipment"></a>
                 </div>
             </div>
         </div>
@@ -28,6 +30,7 @@
                 <div class="card-body">
                     <h5 class="card-title mb-2">Borrows</h5>
                     <div class="display-6">0</div>
+                    <a href="#" class="stretched-link" aria-label="Go to Borrows"></a>
                 </div>
             </div>
         </div>
