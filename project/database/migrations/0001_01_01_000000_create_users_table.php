@@ -22,6 +22,18 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('books', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 255);
+            $table->string('author', 255);
+            $table->unsignedSmallInteger('published_year');
+            $table->string('genre', 100);
+            $table->unsignedInteger('quantity')->default(0);
+            $table->timestamps();
+
+            $table->index(['author', 'genre']);
+        });
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
@@ -44,6 +56,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('books');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
