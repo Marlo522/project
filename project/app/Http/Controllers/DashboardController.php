@@ -11,6 +11,7 @@ class DashboardController extends Controller
     {
         $stats = [
             'users' => User::count(),
+            'books' => DB::table('books')->count(),
         ];
 
         return view('dashboard', compact('stats'));
