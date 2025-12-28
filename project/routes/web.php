@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
+
 
 
 
@@ -24,3 +26,7 @@ Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 Route::get('/', function () {
     return view('home');
 })->middleware('auth');
+
+Route::get('/users', [UserController::class, 'index'])
+    ->middleware('auth')
+    ->name('users.index');
