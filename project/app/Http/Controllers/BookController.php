@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -15,22 +17,13 @@ class BookController extends Controller
 
     public function create()
     {
-        // Uses your existing addbook view
         return view('addbook');
     }
 
-    public function store(Request $request)
+    public function store(StoreBookRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required','string','max:255'],
-            'author' => ['required','string','max:255'],
-            'published_year' => ['required','integer','min:0','max:' . date('Y')],
-            'genre' => ['required','string','max:100'],
-            'quantity' => ['required','integer','min:0'],
-        ]);
-
+        $data = $request->validated();
         Book::create($data);
-
         return redirect()->route('books.index')->with('status', 'Book added');
     }
 
@@ -39,18 +32,10 @@ class BookController extends Controller
         return view('editbook', compact('book'));
     }
 
-    public function update(Request $request, Book $book)
+    public function update(UpdateBookRequest $request, Book $book)
     {
-        $data = $request->validate([
-            'name' => ['required','string','max:255'],
-            'author' => ['required','string','max:255'],
-            'published_year' => ['required','integer','min:0','max:' . date('Y')],
-            'genre' => ['required','string','max:100'],
-            'quantity' => ['required','integer','min:0'],
-        ]);
-
+        $data = $request->validated();
         $book->update($data);
-
         return redirect()->route('books.index')->with('status', 'Book updated');
     }
 

@@ -1,13 +1,13 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function index(\Illuminate\Http\Request $request)
     {
         // Fetch all users with pagination
         $users = User::query()->latest()->paginate(10);
@@ -20,13 +20,9 @@ class UserController extends Controller
         return view('adduser');
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $validated = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        $validated = $request->validated();
 
         // Will be hashed automatically due to 'password' => 'hashed' cast
         User::create($validated);
@@ -39,16 +35,12 @@ class UserController extends Controller
         return view('edituser', compact('user'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $validated = $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-        ]);
+        $validated = $request->validated();
 
-        // If password is not provided, remove it from validated data to avoid overwriting
-        if (empty($validated['password'])) {
+        // If password not filled, avoid overwriting existing password
+        if (!$request->filled('password')) {
             unset($validated['password']);
         }
 
@@ -63,5 +55,4 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('status', 'User deleted.');
     }
-
 }

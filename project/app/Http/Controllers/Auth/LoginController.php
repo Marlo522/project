@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use App\Http\Requests\LoginRequest;
 
 class LoginController extends Controller
 {
@@ -20,14 +21,9 @@ class LoginController extends Controller
     /**
      * Handle login request.
      */
-    public function store(Request $request)
+    public function store(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
-
-        $credentials = $request->only('email', 'password',);
+        $credentials = $request->only('email', 'password');
         $remember = $request->boolean('remember');
 
         if (Auth::attempt($credentials, $remember)) {
@@ -46,10 +42,6 @@ class LoginController extends Controller
 
             return redirect()->route('dashboard')->with('success', 'Welcome back!');
         }
-
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials do not match our records.'],
-        ]);
     }
 
     /**
@@ -62,6 +54,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'You have been logged out.');
+        return redirect('login')->with('success', 'You have been logged out.');
     }
 }
